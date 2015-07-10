@@ -18,6 +18,7 @@ function [d2 C] = roll3(M, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##   ang    угол профиля резьбы, град
 	##   dalp   отклонение угла профиля, мин
 	##   ddpref отклонения диаметров проволочек (3-вектор), мкм
+	##   C5     поправка, учитывающая измерительное усилие 2Н, мкм
 	##
 
 	dpref = dp(P, ang);
@@ -34,7 +35,7 @@ function C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5)
 	C3 = err3(ddpref(1), ddpref(2), ddpref(3));
 	C4 = err4(d2nom, P, Ph, dpref);
 	C = C1/1000 + C3/1000 + C4 + C5/1000;
-	printf("Errors:\n");
+	printf("Deviations:\n");
 	printf("  C1 = %g\n", C1);
 	printf("  C3 = %g\n", C3);
 	printf("  C4 = %g\n", C4);

@@ -4,7 +4,7 @@ function [d2 C] = roll3(M, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##
 	## Использование:
 	##
-	##   [d2 C] = roll3(M, P, ang)
+	##   [d2 C] = roll3(M, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##
 	##   d2     рассчитанное значение среднего диаметра, мм
 	##   C      суммарная поправка (d2 = d2calc + C), мм
@@ -29,16 +29,17 @@ endfunction
 
 
 
-function C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom)
+function C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5)
 	C1 = err1(dpref, P, dalp);
-	C3 = err3(dpref(1), dpref(2), dpref(3));
+	C3 = err3(ddpref(1), ddpref(2), ddpref(3));
 	C4 = err4(d2nom, P, Ph, dpref);
+	C = C1/1000 + C3/1000 + C4 + C5/1000;
 	printf("Errors:\n");
 	printf("  C1 = %g\n", C1);
 	printf("  C3 = %g\n", C3);
-	printf("  C4 = %g\n\n", C4);
-	printf("  C5 = %g\n\n", C5);
-	C = C1/1000 + C3/1000 + C4 + C5/1000;
+	printf("  C4 = %g\n", C4);
+	printf("  C5 = %g\n", C5);
+	printf("  C = %g\n\n", C);
 endfunction
 
 

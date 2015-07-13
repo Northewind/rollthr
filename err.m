@@ -1,9 +1,14 @@
-function C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5)
+function [C] = err(dpref, P, Ph, dalp, ddpref, d2nom, C5)
 	##  Расчёт суммарной поправки на измерение резьбы методом трёх проволочек
 	##
 	##  Использование:
 	##
-	##    C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5)
+	##    [C1 C3 C4 C5] = err(dpref, P, Ph, dalp, ddpref, d2nom, C5)
+	##
+	##    C1    поправка, учитывающая действительное отклонение угла профиля
+	##    C3    поправка, учитывающая действительное отклонение диаметров проволочек
+	##    C4    поправка, учитывающая расположение проволочек под углом к оси резьбы
+	##    C5    поправка, учитывающая измерительное усилие 2Н, мм
 	##
 	##  Входные параметры:
 	##
@@ -19,15 +24,15 @@ function C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5)
 	C1 = err1(dpref, P, dalp);
 	C3 = err3(ddpref(1), ddpref(2), ddpref(3));
 	C4 = err4(d2nom, P, Ph, dpref);
-	C = C1/1000 + C3/1000 + C4 + C5/1000;
+	C = [C1/1000  C3/1000  C4  C5/1000];
 
-	return;
+	#return;
 	printf("Deviations:\n");
 	printf("  C1 = %g\n", C1);
 	printf("  C3 = %g\n", C3);
 	printf("  C4 = %g\n", C4);
 	printf("  C5 = %g\n", C5);
-	printf("  C = %g\n\n", C);
+	printf("  Csum = %g\n", sum(C));
 endfunction
 
 

@@ -10,8 +10,7 @@ format long g
 	##   ddpref отклонения диаметров проволочек (3-вектор), мкм
 	##   C5     поправка, учитывающая измерительное усилие 2Н, мкм
 
-printf("Plug Go:\n");
-d2 = [122.608  122.648]
+d2 = 124.066 + [-0.04 0];
 d = 130;
 P = 12;
 Ph = 24;
@@ -19,6 +18,26 @@ ang = 30;
 dalp = 0;
 ddpref = [0 0 0];
 C5 = 0.4;
-M = turnsize3(d2, d, P, Ph, ang, dalp, ddpref, C5)
+[M C] = turnsize3(d2, d, P, Ph, ang, dalp, ddpref, C5);
+printf("PlugGo M:     %.3f\n", M);
+printf("PlugGo M tol: %.3f\n\n", M(2) - M(1));
+#d2 = roll3(M, d, P, Ph, ang, dalp, ddpref, C5)
 
-d2 = roll3(M, d, P, Ph, ang, dalp, ddpref, C5)
+d2 = 124.71 + [-0.04 0];
+[M C] = turnsize3(d2, d, P, Ph, ang, dalp, ddpref, C5);
+printf("PlugNG M:     %.3f\n", M);
+printf("PlugNG M tol: %.3f\n\n", M(2) - M(1));
+#d2 = roll3(M, d, P, Ph, ang, dalp, ddpref, C5)
+
+d2 = 123.881 + [-0.032 0];
+[M C] = turnsize3(d2, d, P, Ph, ang, dalp, ddpref, C5);
+printf("CPlugGo M:     %.3f\n", M);
+printf("CPlugGo M tol: %.3f\n\n", M(2) - M(1));
+#d2 = roll3(M, d, P, Ph, ang, dalp, ddpref, C5)
+
+d2 = 123.369 + [-0.032 0];
+[M C] = turnsize3(d2, d, P, Ph, ang, dalp, ddpref, C5);
+printf("CPlugNG M:     %.3f\n", M);
+printf("CPlugNG M tol: %.3f\n\n", M(2) - M(1));
+#d2 = roll3(M, d, P, Ph, ang, dalp, ddpref, C5)
+

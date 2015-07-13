@@ -1,12 +1,13 @@
-function [M] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
+function [M, C] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	## Определение непосредственно контролируемого размера методом трёх проволочек 
 	##   (по ГОСТ 8.677-2009), исользуя задаваемый средний диаметр
 	##
 	## Использование:
 	##
-	##   [M] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
+	##   [M C] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##
 	##   M      Настроечный размер, мм
+	##   C      Суммарная поправка (М=М'-C), мм
 	##
 	## Входные параметры:
 	##
@@ -21,8 +22,10 @@ function [M] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##
 
 	dpref = dp(P, ang);
+	printf("Предпочтительный диаметр ролика: %.3f\n", dpref);
+
 	d2nom = d - 0.5*P;
-	C = sumerr(dpref, P, Ph, dalp, ddpref, d2nom, C5);
+	C = sum(err(dpref, P, Ph, dalp, ddpref, d2nom, C5));
 	a2 = ang / 2;
 	M = d2 + dpref*(1 + 1/sind(a2)) - P*cotd(a2)/2 - C;
 endfunction

@@ -26,7 +26,8 @@ function [C] = err(dpref, P, Ph, dalp, ddpref, d2nom, C5)
 	C4 = err4(d2nom, P, Ph, dpref);
 	C = [C1/1000  C3/1000  C4  C5/1000];
 
-	#return;
+	return;
+	# Debug output
 	printf("Deviations:\n");
 	printf("  C1 = %g\n", C1);
 	printf("  C3 = %g\n", C3);

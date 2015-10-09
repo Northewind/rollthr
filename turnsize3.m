@@ -21,8 +21,11 @@ function [M, C] = turnsize3(d2, d, P, Ph, ang, dalp=0, ddpref=[0 0 0], C5=0)
 	##   C5     поправка, учитывающая измерительное усилие 2Н, мкм
 	##
 
-	dpref = dp(P, ang);
+	droll = dp(P, ang);
+	dpref = droll(1);
+	dmax  = droll(2);
 	printf("Предпочтительный диаметр ролика: %.3f\n", dpref);
+	printf("Максимальный диаметр ролика: %.3f\n", dpref);
 
 	d2nom = d - 0.5*P;
 	C = sum(err(dpref, P, Ph, dalp, ddpref, d2nom, C5));

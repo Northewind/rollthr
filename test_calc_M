@@ -1,7 +1,7 @@
-function [M, C] = turnsize3(d2, d, P, Ph, alp, dalp=0, droll=NA, ddroll=[0 0 0], C5=0)
-	## Определение непосредственно контролируемого размера методом трёх проволочек 
-	##   (по ГОСТ 8.677-2009), исользуя задаваемый средний диаметр
-	##
+#! /usr/bin/octave -qf
+format long g
+disp("");
+
 	## Использование:
 	##
 	##   [M C] = turnsize3(d2, d, P, Ph, alp, dalp=0, droll=NA, ddroll=[0 0 0], C5=0)
@@ -24,20 +24,26 @@ function [M, C] = turnsize3(d2, d, P, Ph, alp, dalp=0, droll=NA, ddroll=[0 0 0],
 	##          (по умолчанию используется предпочтительный), мм
 	##   ddroll отклонения диаметров проволочек (3-вектор) от номинала, мкм
 	##   C5     поправка, учитывающая измерительное усилие 2Н, мкм
-	##
 
-	[dpref dmax] = dp(P, alp);
-	printf("Предпочтительный диаметр ролика: %.3f\n", dpref);
-	printf("Максимальный диаметр ролика: %.3f\n", dmax);
-	if (isna(droll)) 
-		droll = dpref;
-	elseif (droll < dpref || droll > dmax)
-		printf("Предупреждение: указанный диаметр ролика не попадает в допустимый диапазон\n");
-	endif
+disp("Plug gage for 3.75\"-5 ACME-2 STARTS-3G-LEFT\n");
+d2 = 92.745 + [-0.0165 0.0165];
+d = 95.285;
+P = 25.4/5;
+Ph = P*2;
+alp = 29;
+dalp = 0;
+droll = 2.588;
+ddroll = [0 0 0];
+C5 = 0.4;
 
-	d2nom = d - 0.5*P;
-	C = sum(err(droll, P, Ph, alp, dalp, ddroll, d2nom, C5));
-	a2 = alp / 2;
-	M = d2 + droll*(1 + 1/sind(a2)) - P*cotd(a2)/2 - C;
-endfunction
+[M C] = turnsize3(d2, d, P, Ph, alp, dalp, droll, ddroll, C5);
+printf("Plug GO M:     %.3f\n", M);
+printf("Plug GO M tol: %.3f\n\n", M(2) - M(1));
 
+d2 = 93.046 + [-0.0165 0.0165];
+#d = 94;
+[M C] = turnsize3(d2, d, P, Ph, alp, dalp, droll, ddroll, C5);
+printf("Plug NOGO M:     %.3f\n", M);
+printf("Plug NOGO M tol: %.3f\n\n", M(2) - M(1));
+
+disp("\n===============\n");

@@ -28,10 +28,10 @@ function [C] = err(droll, P, Ph, alp, dalp, ddroll, d2nom, C5)
 	else
 		C1 = C3 = 0;
 	endif
-	C4 = err4(d2nom, P, Ph, droll);
+	C4 = err4(d2nom, P, Ph, droll, alp);
 	C = [C1/1000  C3/1000  C4  C5/1000];
 
-	return;
+	#return;
 	# Debug output
 	printf("Deviations:\n");
 	printf("  C1 = %g\n", C1);
@@ -61,16 +61,37 @@ endfunction
 
 
 
-function C4 = err4(d2, P, Ph, droll)
+function C4 = err4(d2, P, Ph, droll, alp)
 	## Поправка, учитывающая расположение проволочек под углом к оси резьбы
 	##
+	n = Ph / P; 
 	if (thrang(d2, Ph) < 7)
-		n = Ph / P; 
 		C4 = d2 - 1.866*P;
 		C4 = (C4 + 3.6049*droll) * (C4 + 3.8637*droll); 
 		C4 = -0.1826 * P^2 * n^2 * droll / C4;
 	else
-		C4 = 0;
+		a2 = alp/2;
+		x1 = d2 - P/2*cotd(a2) + droll/sind(a2);
+		y1 = P*n*droll*cosd(a2)/pi/x1^2;
+		[xi yi] = err4gt7(x1, y1, d2, P, n, droll, a2);
+		do
+			C4pre = x1 - xi;
+			[xi yi] = err4gt7(xi, yi, d2, P, n, droll, a2);
+			C4 = x1 - xi;
+		until (C4pre == C4);
 	endif
+endfunction
+
+
+function [xi yi] = err4gt7(xi, yi, d2, P, n, droll, a2)
+		xi = d2 - P/2*cotd(a2) + ...
+		     droll/sind(a2) + ...
+		     P*n*cotd(a2)/pi*yi - ...
+			 xi/2*(xi/droll/sind(a2) - 1)*yi^2 - ...
+			 xi^4/8/droll^3/sind(a2)*yi^4;
+		yi = P*n*droll*cosd(a2)/pi/xi^2 * ...
+		     (1 - xi^2/2/droll^2*yi^2 - xi^4/8/droll^4*yi^4) / ...
+			 (1 - droll/xi*sind(a2) + ...
+			 ((1/6 - xi^2/2/droll^2)*droll*sind(a2)/xi - 2/3)*yi^2);
 endfunction
 

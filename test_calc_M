@@ -25,6 +25,31 @@ disp("");
 	##   ddroll отклонения диаметров проволочек (3-вектор) от номинала, мкм
 	##   C5     поправка, учитывающая измерительное усилие 2Н, мкм
 
+disp("Plug gage for Tr32x12(P6)-7H\n");
+d2 = 29.048 + [-0.026 0];
+d = 32;
+P = 6;
+Ph = P*2;
+alp = 30;
+dalp = 0;
+droll = 3.106; #2.588; #3.106;
+ddroll = [0 0 0];
+C5 = 0.4;
+
+[M C] = turnsize3(d2, d, P, Ph, alp, dalp, droll, ddroll, C5);
+printf("Plug GO M:     %.4f\n", M);
+
+d2 = 29.476 + [-0.026 0];
+[M C] = turnsize3(d2, d, P, Ph, alp, dalp, droll, ddroll, C5);
+printf("Plug NOGO M:     %.4f\n", M);
+return
+
+
+
+disp("\n===============\n");
+
+
+
 disp("Plug gage for 3.75\"-5 ACME-2 STARTS-3G-LEFT\n");
 d2 = 92.745 + [-0.0165 0.0165];
 d = 95.285;
